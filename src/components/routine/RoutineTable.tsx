@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ClassSession, FilterState } from '@/types/routine';
 import { classSessions, timeSlots, days } from '@/data/routineData';
 import { RoutineCell } from './RoutineCell';
@@ -18,9 +18,54 @@ const dayLabels: Record<string, string> = {
   THU: 'Thursday',
 };
 
+const getCurrentDayCode = (): string => {
+  const dayMap: Record<number, string> = {
+    0: 'SUN',
+    1: 'MON',
+    2: 'TUE',
+    3: 'WED',
+    4: 'THU',
+  };
+  return dayMap[new Date().getDay()] || '';
+};
+
+const parseTimeToMinutes = (time: string): number => {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
+};
+
+const getCurrentTimeSlotId = (): string | null => {
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  
+  for (const slot of timeSlots) {
+    const slotStart = parseTimeToMinutes(slot.start);
+    const slotEnd = parseTimeToMinutes(slot.end);
+    
+    if (currentMinutes >= slotStart && currentMinutes <= slotEnd) {
+      return slot.id;
+    }
+  }
+  return null;
+};
+
 export const RoutineTable = ({ filters }: RoutineTableProps) => {
   const [selectedSession, setSelectedSession] = useState<ClassSession | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [currentTimeSlotId, setCurrentTimeSlotId] = useState<string | null>(null);
+  const [currentDay, setCurrentDay] = useState<string>('');
+
+  useEffect(() => {
+    const updateCurrentTime = () => {
+      setCurrentTimeSlotId(getCurrentTimeSlotId());
+      setCurrentDay(getCurrentDayCode());
+    };
+    
+    updateCurrentTime();
+    const interval = setInterval(updateCurrentTime, 60000); // Update every minute
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const getSessionForSlot = (day: string, slotId: string): ClassSession | null => {
     const slot = timeSlots.find(s => s.id === slotId);
@@ -54,6 +99,10 @@ export const RoutineTable = ({ filters }: RoutineTableProps) => {
     const matchesDay = !filters.day || session.day === filters.day;
 
     return matchesDept && matchesCourse && matchesTeacher && matchesRoom && matchesDay;
+  };
+
+  const isCurrentTimeSlot = (day: string, slotId: string): boolean => {
+    return day === currentDay && slotId === currentTimeSlotId;
   };
 
   const handleCellClick = (session: ClassSession) => {
@@ -115,6 +164,7 @@ export const RoutineTable = ({ filters }: RoutineTableProps) => {
                         isHighlighted={session ? isHighlighted(session) : false}
                         onClick={() => session && handleCellClick(session)}
                         colSpan={session?.colSpan}
+                        isCurrentTime={isCurrentTimeSlot(day, slot.id)}
                       />
                     );
                   })}
@@ -135,6 +185,7 @@ export const RoutineTable = ({ filters }: RoutineTableProps) => {
                         isHighlighted={session ? isHighlighted(session) : false}
                         onClick={() => session && handleCellClick(session)}
                         colSpan={session?.colSpan}
+                        isCurrentTime={isCurrentTimeSlot(day, slot.id)}
                       />
                     );
                   })}

@@ -53,7 +53,7 @@ export const teachers: Teacher[] = [
   {
     code: 'RA',
     name: 'Ruhul Amin',
-    designation: 'Assistant Professor',
+    designation: 'Lecturer',
     department: 'CSE',
   },
 ];

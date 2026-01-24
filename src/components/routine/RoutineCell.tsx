@@ -3,19 +3,29 @@ import { ClassSession } from '@/types/routine';
 import { getCourseByCode, getTeacherByCode } from '@/data/routineData';
 import { DepartmentBadge } from './DepartmentBadge';
 import { RoomBadge } from './RoomBadge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface RoutineCellProps {
   session: ClassSession | null;
   isHighlighted: boolean;
   onClick: () => void;
   colSpan?: number;
+  isCurrentTime?: boolean;
 }
 
-export const RoutineCell = ({ session, isHighlighted, onClick, colSpan = 1 }: RoutineCellProps) => {
+export const RoutineCell = ({ session, isHighlighted, onClick, colSpan = 1, isCurrentTime }: RoutineCellProps) => {
   if (!session) {
     return (
       <td 
-        className="routine-cell routine-cell-empty"
+        className={cn(
+          "routine-cell routine-cell-empty",
+          isCurrentTime && "border-t-2 border-t-red-500"
+        )}
         style={{ gridColumn: `span ${colSpan}` }}
       />
     );
@@ -27,15 +37,17 @@ export const RoutineCell = ({ session, isHighlighted, onClick, colSpan = 1 }: Ro
     .filter(Boolean)
     .join(', ');
 
-  return (
+  const cellContent = (
     <td
       colSpan={colSpan}
       className={cn(
         'routine-cell cell-interactive group',
-        isHighlighted && 'cell-highlighted',
+        isHighlighted && 'cell-highlighted ring-2 ring-primary ring-offset-2',
+        isCurrentTime && 'border-t-2 border-t-red-500',
         course?.type === 'sessional' 
           ? 'bg-gradient-to-br from-secondary/10 to-secondary/5 border-secondary/30' 
-          : 'bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20'
+          : 'bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20',
+        'hover:ring-2 hover:ring-primary/50 hover:ring-offset-1 transition-all duration-200'
       )}
       onClick={onClick}
     >
@@ -73,5 +85,18 @@ export const RoutineCell = ({ session, isHighlighted, onClick, colSpan = 1 }: Ro
         course?.type === 'sessional' ? 'bg-secondary' : 'bg-primary'
       )} />
     </td>
+  );
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          {cellContent}
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-xs">
+          <p className="font-medium">{course?.title || session.courseCode}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
