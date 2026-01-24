@@ -5,11 +5,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ClassSession } from '@/types/routine';
-import { getCourseByCode, getTeacherByCode } from '@/data/routineData';
-import { DepartmentBadge } from './DepartmentBadge';
+import { getCourseByCode, getTeacherByCode, getDepartmentByCode } from '@/data/routineData';
 import { RoomBadge } from './RoomBadge';
-import { YearBadge } from './YearBadge';
-import { Clock, BookOpen, FlaskConical, Users, CreditCard } from 'lucide-react';
+import { Clock, BookOpen, FlaskConical, Users, CreditCard, GraduationCap, Calendar, LayoutGrid } from 'lucide-react';
 
 interface CourseDetailModalProps {
   session: ClassSession | null;
@@ -22,6 +20,7 @@ export const CourseDetailModal = ({ session, open, onOpenChange }: CourseDetailM
 
   const course = getCourseByCode(session.courseCode);
   const teachers = session.teacherCodes.map(code => getTeacherByCode(code)).filter(Boolean);
+  const department = getDepartmentByCode(session.department);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -77,31 +76,48 @@ export const CourseDetailModal = ({ session, open, onOpenChange }: CourseDetailM
             </div>
           </div>
 
-          {/* Location & Department */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium text-muted-foreground">Location</h4>
-              <RoomBadge roomNo={session.roomNo} />
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium text-muted-foreground">Class</h4>
-              <YearBadge 
-                year={session.year} 
-                semester={session.semester} 
-                section={session.section} 
-              />
+          {/* Location */}
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-muted-foreground">Location</h4>
+            <RoomBadge roomNo={session.roomNo} />
+          </div>
+
+          {/* Class Info - Year, Semester, Section */}
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-muted-foreground">Class</h4>
+            <div className="flex flex-wrap gap-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border bg-gradient-to-r from-blue-500/20 to-indigo-500/20 text-blue-700 border-blue-300">
+                <GraduationCap className="w-4 h-4" />
+                <div className="flex flex-col">
+                  <span className="text-xs opacity-70">Year</span>
+                  <span className="font-semibold">{session.year}</span>
+                </div>
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-700 border-emerald-300">
+                <Calendar className="w-4 h-4" />
+                <div className="flex flex-col">
+                  <span className="text-xs opacity-70">Semester</span>
+                  <span className="font-semibold">{session.semester}</span>
+                </div>
+              </div>
+              {session.section && (
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-700 border-purple-300">
+                  <LayoutGrid className="w-4 h-4" />
+                  <div className="flex flex-col">
+                    <span className="text-xs opacity-70">Section</span>
+                    <span className="font-semibold">{session.section}</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Department */}
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-muted-foreground">Department</h4>
-            <DepartmentBadge 
-              department={session.department} 
-              year={session.year} 
-              semester={session.semester}
-              section={session.section}
-            />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-700 border-amber-300">
+              <span className="font-semibold">{department?.fullName || session.department}</span>
+            </div>
           </div>
 
           {/* Course Stats */}
