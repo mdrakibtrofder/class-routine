@@ -52,7 +52,7 @@ const Index = () => {
         />
 
         {/* Routine Table */}
-        <RoutineTable filters={filters} />
+        <RoutineTable filters={filters} onClearFilters={handleClearFilters} />
 
         {/* Course List */}
         <CourseList />
