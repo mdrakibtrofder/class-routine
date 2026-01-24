@@ -126,7 +126,7 @@ export const RoutineTable = ({ filters, onClearFilters }: RoutineTableProps) => 
       
       <div className="overflow-x-auto animate-slide-up">
         <div className="glass-card rounded-2xl shadow-card overflow-hidden min-w-[1200px]">
-          <table className="w-full border-collapse border-spacing-2" style={{ borderSpacing: '8px' }}>
+          <table className="w-full border-collapse table-fixed" style={{ borderSpacing: '1px' }}>
             <thead>
               <tr>
                 <th className="time-header w-24 rounded-tl-2xl">Day</th>

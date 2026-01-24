@@ -68,11 +68,10 @@ export const RoutineCell = ({
       colSpan={colSpan}
       className={cn(
         'routine-cell cell-interactive group',
-        'bg-[#1891CF]/90 border-[#1891CF]/50',
-        'hover:bg-gradient-to-br hover:from-primary/10 hover:to-primary/20',
+        'bg-[#1891CF] border-[#1891CF]/50',
+        'hover:bg-gradient-to-br hover:from-primary/10 hover:to-primary/20 hover:bg-card',
         isHighlighted && 'cell-highlighted ring-2 ring-primary ring-offset-2',
-        isCurrentTime && 'border-t-2 border-t-destructive',
-        'hover:ring-2 hover:ring-primary/50 hover:ring-offset-1 transition-all duration-200'
+        isCurrentTime && 'border-t-2 border-t-destructive'
       )}
       onClick={onClick}
     >
@@ -80,15 +79,15 @@ export const RoutineCell = ({
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex items-center gap-1.5">
           {isSessional ? (
-            <FlaskConical className="w-4 h-4 text-white" />
+            <FlaskConical className="w-4 h-4 text-white group-hover:text-foreground" />
           ) : (
-            <BookOpen className="w-4 h-4 text-white" />
+            <BookOpen className="w-4 h-4 text-white group-hover:text-foreground" />
           )}
-          <span className="font-bold text-sm text-white">
+          <span className="font-bold text-sm text-white group-hover:text-foreground">
             {session.courseCode}
           </span>
         </div>
-        <span className="text-xs font-medium bg-white/20 text-white px-1.5 py-0.5 rounded">
+        <span className="text-xs font-medium bg-white/20 group-hover:bg-muted text-white group-hover:text-foreground px-1.5 py-0.5 rounded">
           {teacherNames}
         </span>
       </div>
@@ -104,12 +103,6 @@ export const RoutineCell = ({
           compact
         />
       </div>
-
-      {/* Hover indicator */}
-      <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:to-primary/15 transition-all duration-300 pointer-events-none" />
-      
-      {/* Type indicator line */}
-      <div className="absolute top-0 left-0 w-1 h-full rounded-l-lg bg-white/40" />
     </td>
   );
 
