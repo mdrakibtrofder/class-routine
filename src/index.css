@@ -2,87 +2,105 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 220 30% 96%;
+    --foreground: 220 40% 13%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 40% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 40% 13%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 220 60% 25%;
+    --primary-foreground: 45 100% 96%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 200 80% 45%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 20% 90%;
+    --muted-foreground: 220 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 45 90% 55%;
+    --accent-foreground: 220 40% 13%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 20% 85%;
+    --input: 220 20% 85%;
+    --ring: 220 60% 25%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Custom tokens */
+    --glass-bg: 220 30% 98% / 0.8;
+    --glass-border: 220 30% 90% / 0.5;
+    --gradient-primary: linear-gradient(135deg, hsl(220 60% 25%), hsl(220 60% 35%));
+    --gradient-accent: linear-gradient(135deg, hsl(45 90% 55%), hsl(35 95% 50%));
+    --gradient-secondary: linear-gradient(135deg, hsl(200 80% 45%), hsl(190 75% 50%));
+    --shadow-card: 0 10px 40px -10px hsl(220 60% 25% / 0.15);
+    --shadow-hover: 0 20px 50px -15px hsl(220 60% 25% / 0.25);
+    --shadow-glow: 0 0 30px hsl(45 90% 55% / 0.3);
+
+    /* Department colors */
+    --dept-cse: 200 80% 45%;
+    --dept-ce: 150 60% 40%;
+    --dept-bba: 280 60% 50%;
+    --dept-english: 340 70% 55%;
+
+    /* Room badge colors */
+    --room-primary: 220 60% 50%;
+    --room-lab: 150 60% 45%;
+    --room-lecture: 35 80% 50%;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 220 40% 8%;
+    --foreground: 220 20% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 35% 12%;
+    --card-foreground: 220 20% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 35% 12%;
+    --popover-foreground: 220 20% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 45 90% 55%;
+    --primary-foreground: 220 40% 10%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 200 70% 50%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 220 30% 18%;
+    --muted-foreground: 220 15% 60%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 45 90% 55%;
+    --accent-foreground: 220 40% 10%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 220 30% 20%;
+    --input: 220 30% 20%;
+    --ring: 45 90% 55%;
+
+    --glass-bg: 220 35% 15% / 0.9;
+    --glass-border: 220 30% 25% / 0.5;
+    --shadow-card: 0 10px 40px -10px hsl(0 0% 0% / 0.4);
+    --shadow-hover: 0 20px 50px -15px hsl(0 0% 0% / 0.5);
+    
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +118,154 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Poppins', sans-serif;
   }
+
+  h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-xl border border-white/20 shadow-lg;
+  }
+
+  .cell-interactive {
+    @apply transition-all duration-300 ease-out cursor-pointer;
+    @apply hover:scale-[1.02] hover:shadow-xl hover:z-10;
+  }
+
+  .cell-highlighted {
+    @apply ring-2 ring-accent ring-offset-2 ring-offset-background;
+    animation: pulse-highlight 2s ease-in-out infinite;
+  }
+
+  .dept-badge {
+    @apply px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .dept-cse {
+    @apply bg-[hsl(200_80%_45%)] text-white;
+  }
+
+  .dept-ce {
+    @apply bg-[hsl(150_60%_40%)] text-white;
+  }
+
+  .dept-bba {
+    @apply bg-[hsl(280_60%_50%)] text-white;
+  }
+
+  .dept-english {
+    @apply bg-[hsl(340_70%_55%)] text-white;
+  }
+
+  .room-badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium;
+  }
+
+  .year-badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  .filter-dropdown {
+    @apply bg-card border border-border rounded-lg shadow-lg;
+  }
+
+  .routine-cell {
+    @apply relative p-3 min-h-[80px] rounded-lg transition-all duration-300;
+    @apply bg-gradient-to-br from-card to-card/80;
+    @apply border border-border/50 hover:border-primary/30;
+    @apply hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  .routine-cell-empty {
+    @apply bg-muted/30 border-dashed border-muted;
+  }
+
+  .time-header {
+    @apply bg-primary text-primary-foreground font-semibold text-center py-3 px-2;
+    @apply first:rounded-tl-xl last:rounded-tr-xl;
+  }
+
+  .day-header {
+    @apply bg-primary text-primary-foreground font-semibold text-center py-4 px-3;
+    @apply first:rounded-tl-xl;
+  }
+
+  .break-cell {
+    @apply bg-gradient-to-r from-accent/20 to-accent/10 flex items-center justify-center;
+    @apply font-medium text-accent-foreground italic;
+  }
+}
+
+@layer utilities {
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+
+  .text-gradient-accent {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-accent);
+  }
+
+  .bg-gradient-primary {
+    background-image: var(--gradient-primary);
+  }
+
+  .bg-gradient-accent {
+    background-image: var(--gradient-accent);
+  }
+
+  .bg-gradient-secondary {
+    background-image: var(--gradient-secondary);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+}
+
+@keyframes pulse-highlight {
+  0%, 100% {
+    box-shadow: 0 0 0 0 hsl(var(--accent) / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 5px hsl(var(--accent) / 0.2);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, hsl(var(--accent) / 0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
 }
