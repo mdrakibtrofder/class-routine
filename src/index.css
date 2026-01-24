@@ -175,13 +175,12 @@
   }
 
   .routine-cell {
-    @apply relative p-3 min-h-[90px] transition-all duration-200;
+    @apply relative p-3 min-h-[90px] transition-colors duration-200;
     @apply border border-gray-400;
-    border-collapse: separate;
   }
 
   .routine-cell-empty {
-    @apply bg-muted/20 border border-gray-400;
+    @apply bg-muted/30 border border-gray-400;
   }
 
   .time-header {

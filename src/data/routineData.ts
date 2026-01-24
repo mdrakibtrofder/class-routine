@@ -45,8 +45,8 @@ export const courses: Course[] = [
 
 export const teachers: Teacher[] = [
   {
-    code: 'NF1',
-    name: 'NEW FACULTY 1',
+    code: 'MRT',
+    name: 'Md. Rakib Trofder',
     designation: 'Lecturer',
     department: 'CSE',
   },
@@ -83,7 +83,7 @@ export const classSessions: ClassSession[] = [
   {
     id: '1',
     courseCode: 'CSE 2124',
-    teacherCodes: ['NF1'],
+    teacherCodes: ['MRT'],
     roomNo: '210',
     department: 'CE',
     year: 2,
@@ -96,7 +96,7 @@ export const classSessions: ClassSession[] = [
   {
     id: '2',
     courseCode: 'CSE 2123',
-    teacherCodes: ['NF1'],
+    teacherCodes: ['MRT'],
     roomNo: '014',
     department: 'CE',
     year: 2,
@@ -108,7 +108,7 @@ export const classSessions: ClassSession[] = [
   {
     id: '3',
     courseCode: 'CSE 4215',
-    teacherCodes: ['NF1'],
+    teacherCodes: ['MRT'],
     roomNo: '407',
     department: 'CSE',
     year: 4,
@@ -121,7 +121,7 @@ export const classSessions: ClassSession[] = [
   {
     id: '4',
     courseCode: 'CSE 2110',
-    teacherCodes: ['RA', 'NF1'],
+    teacherCodes: ['RA', 'MRT'],
     roomNo: '302',
     department: 'English',
     year: 2,
@@ -135,7 +135,7 @@ export const classSessions: ClassSession[] = [
   {
     id: '5',
     courseCode: 'CSE 2123',
-    teacherCodes: ['NF1'],
+    teacherCodes: ['MRT'],
     roomNo: '014',
     department: 'CE',
     year: 2,
@@ -147,7 +147,7 @@ export const classSessions: ClassSession[] = [
   {
     id: '6',
     courseCode: 'CSE 1204',
-    teacherCodes: ['RA', 'NF1'],
+    teacherCodes: ['RA', 'MRT'],
     roomNo: '311',
     department: 'BBA',
     year: 1,
@@ -161,7 +161,7 @@ export const classSessions: ClassSession[] = [
   {
     id: '7',
     courseCode: 'CSE 2123',
-    teacherCodes: ['NF1'],
+    teacherCodes: ['MRT'],
     roomNo: '014',
     department: 'CE',
     year: 2,
@@ -173,7 +173,7 @@ export const classSessions: ClassSession[] = [
   {
     id: '8',
     courseCode: 'CSE 4215',
-    teacherCodes: ['NF1'],
+    teacherCodes: ['MRT'],
     roomNo: '407',
     department: 'CSE',
     year: 4,

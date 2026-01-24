@@ -10,8 +10,8 @@ export const RoomBadge = ({ roomNo, compact }: RoomBadgeProps) => {
   if (compact) {
     return (
       <span className={cn(
-        'inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border',
-        'bg-muted text-muted-foreground border-border group-hover:bg-white/20 group-hover:text-white group-hover:border-white/30'
+        'inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium',
+        'bg-orange-500 text-white group-hover:bg-white/20'
       )}>
         <MapPin className="w-2.5 h-2.5" />
         {roomNo}

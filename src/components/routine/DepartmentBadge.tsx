@@ -46,7 +46,9 @@ export const DepartmentBadge = ({ department, year, semester, section, compact }
     return (
       <span className={cn(
         'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold',
-        'bg-muted text-muted-foreground group-hover:bg-white/20 group-hover:text-white'
+        config.bgClass,
+        config.className,
+        'group-hover:bg-white/20'
       )}>
         <Icon className="w-3 h-3" />
         {department} {yearLabel}
