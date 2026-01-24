@@ -71,7 +71,7 @@ export const RoutineCell = ({
             colSpan={colSpan}
             className={cn(
               'routine-cell cell-interactive group cursor-pointer',
-              'bg-card border border-border',
+              'bg-muted/50 border border-gray-400',
               'hover:bg-[#1891CF] hover:border-[#1891CF]',
               isHighlighted && 'cell-highlighted ring-2 ring-primary ring-offset-2',
               isCurrentTime && 'border-t-2 border-t-destructive'
@@ -90,7 +90,7 @@ export const RoutineCell = ({
                   {session.courseCode}
                 </span>
               </div>
-              <span className="text-xs font-medium bg-muted group-hover:bg-white/20 text-foreground group-hover:text-white px-1.5 py-0.5 rounded">
+              <span className="text-xs font-medium bg-blue-500 text-white px-1.5 py-0.5 rounded group-hover:bg-white/20">
                 {teacherNames}
               </span>
             </div>
@@ -108,7 +108,7 @@ export const RoutineCell = ({
             </div>
           </td>
         </TooltipTrigger>
-        <TooltipContent side="top" className="max-w-xs z-50">
+        <TooltipContent side="top" className="max-w-xs z-50" sideOffset={5}>
           <p className="font-medium">{course?.title || session.courseCode}</p>
           <p className="text-xs text-muted-foreground">
             {isSessional ? 'Sessional / Lab' : 'Theory'}
