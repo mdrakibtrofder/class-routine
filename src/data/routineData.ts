@@ -66,15 +66,15 @@ export const departments: Department[] = [
 ];
 
 export const timeSlots: TimeSlot[] = [
-  { id: '1', start: '08:00', end: '08:50', label: '08.00-08.50' },
-  { id: '2', start: '09:00', end: '09:50', label: '09.00-09.50' },
-  { id: '3', start: '10:00', end: '10:50', label: '10.00-10.50' },
-  { id: '4', start: '11:30', end: '12:20', label: '11.30-12.20' },
-  { id: '5', start: '12:30', end: '01:20', label: '12.30-01.20' },
-  { id: '6', start: '01:30', end: '02:20', label: '01.30-02.20' },
-  { id: '7', start: '02:30', end: '03:20', label: '02.30-03.20' },
-  { id: '8', start: '03:30', end: '04:20', label: '03.30-04.20' },
-  { id: '9', start: '04:30', end: '05:20', label: '04.30-05.20' },
+  { id: '1', start: '08:00', end: '08:50', label: '08.00-08.50 AM' },
+  { id: '2', start: '09:00', end: '09:50', label: '09.00-09.50 AM' },
+  { id: '3', start: '10:00', end: '10:50', label: '10.00-10.50 AM' },
+  { id: '4', start: '11:30', end: '12:20', label: '11.30-12.20 PM' },
+  { id: '5', start: '12:30', end: '13:20', label: '12.30-01.20 PM' },
+  { id: '6', start: '13:30', end: '14:20', label: '01.30-02.20 PM' },
+  { id: '7', start: '14:30', end: '15:20', label: '02.30-03.20 PM' },
+  { id: '8', start: '15:30', end: '16:20', label: '03.30-04.20 PM' },
+  { id: '9', start: '16:30', end: '17:20', label: '04.30-05.20 PM' },
 ];
 
 export const days: Day[] = ['SUN', 'MON', 'TUE', 'WED', 'THU'];

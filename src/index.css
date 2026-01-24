@@ -175,14 +175,15 @@
   }
 
   .routine-cell {
-    @apply relative p-3 min-h-[80px] rounded-lg transition-all duration-300;
+    @apply relative p-4 min-h-[90px] rounded-lg transition-all duration-300;
     @apply bg-gradient-to-br from-card to-card/80;
-    @apply border border-border/50 hover:border-primary/30;
+    @apply border-2 border-border/50 hover:border-primary/30;
     @apply hover:shadow-lg hover:-translate-y-0.5;
+    margin: 4px;
   }
 
   .routine-cell-empty {
-    @apply bg-muted/30 border-dashed border-muted;
+    @apply bg-muted/30 border-dashed border-muted/50;
   }
 
   .time-header {

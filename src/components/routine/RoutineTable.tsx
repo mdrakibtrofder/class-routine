@@ -4,10 +4,12 @@ import { classSessions, timeSlots, days } from '@/data/routineData';
 import { RoutineCell } from './RoutineCell';
 import { BreakCell } from './BreakCell';
 import { CourseDetailModal } from './CourseDetailModal';
+import { FilterNotification } from './FilterNotification';
 import { cn } from '@/lib/utils';
 
 interface RoutineTableProps {
   filters: FilterState;
+  onClearFilters: () => void;
 }
 
 const dayLabels: Record<string, string> = {
@@ -49,11 +51,13 @@ const getCurrentTimeSlotId = (): string | null => {
   return null;
 };
 
-export const RoutineTable = ({ filters }: RoutineTableProps) => {
+export const RoutineTable = ({ filters, onClearFilters }: RoutineTableProps) => {
   const [selectedSession, setSelectedSession] = useState<ClassSession | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentTimeSlotId, setCurrentTimeSlotId] = useState<string | null>(null);
   const [currentDay, setCurrentDay] = useState<string>('');
+
+  const hasActiveFilters = Object.values(filters).some(v => v !== null);
 
   useEffect(() => {
     const updateCurrentTime = () => {
@@ -62,7 +66,7 @@ export const RoutineTable = ({ filters }: RoutineTableProps) => {
     };
     
     updateCurrentTime();
-    const interval = setInterval(updateCurrentTime, 60000); // Update every minute
+    const interval = setInterval(updateCurrentTime, 60000);
     
     return () => clearInterval(interval);
   }, []);
@@ -79,7 +83,6 @@ export const RoutineTable = ({ filters }: RoutineTableProps) => {
   };
 
   const isSlotCoveredBySpan = (day: string, slotIndex: number): boolean => {
-    // Check if this slot is covered by a previous session's colspan
     for (let i = 0; i < slotIndex; i++) {
       const prevSession = getSessionForSlot(day, timeSlots[i].id);
       if (prevSession?.colSpan && i + prevSession.colSpan > slotIndex) {
@@ -89,8 +92,8 @@ export const RoutineTable = ({ filters }: RoutineTableProps) => {
     return false;
   };
 
-  const isHighlighted = (session: ClassSession): boolean => {
-    if (!Object.values(filters).some(v => v !== null)) return false;
+  const isFiltered = (session: ClassSession): boolean => {
+    if (!hasActiveFilters) return true;
 
     const matchesDept = !filters.department || session.department === filters.department;
     const matchesCourse = !filters.courseCode || session.courseCode === filters.courseCode;
@@ -99,6 +102,11 @@ export const RoutineTable = ({ filters }: RoutineTableProps) => {
     const matchesDay = !filters.day || session.day === filters.day;
 
     return matchesDept && matchesCourse && matchesTeacher && matchesRoom && matchesDay;
+  };
+
+  const isHighlighted = (session: ClassSession): boolean => {
+    if (!hasActiveFilters) return false;
+    return isFiltered(session);
   };
 
   const isCurrentTimeSlot = (day: string, slotId: string): boolean => {
@@ -110,24 +118,28 @@ export const RoutineTable = ({ filters }: RoutineTableProps) => {
     setModalOpen(true);
   };
 
-  // Break column is between slot 3 and slot 4 (index 3)
-  const breakAfterSlot = 2; // After 10:00-10:50
-
   return (
     <>
+      {hasActiveFilters && (
+        <FilterNotification onClearFilters={onClearFilters} />
+      )}
+      
       <div className="overflow-x-auto animate-slide-up">
         <div className="glass-card rounded-2xl shadow-card overflow-hidden min-w-[1200px]">
-          <table className="w-full border-collapse">
+          <table className="w-full border-collapse border-spacing-2" style={{ borderSpacing: '8px' }}>
             <thead>
               <tr>
                 <th className="time-header w-24 rounded-tl-2xl">Day</th>
-                {timeSlots.slice(0, 3).map((slot, idx) => (
+                {timeSlots.slice(0, 3).map((slot) => (
                   <th key={slot.id} className="time-header">
                     {slot.label}
                   </th>
                 ))}
-                <th className="time-header bg-accent text-accent-foreground w-16">
-                  Break
+                <th className="time-header bg-accent text-accent-foreground w-28">
+                  <div className="flex flex-col">
+                    <span className="text-xs">10.50 AM</span>
+                    <span className="text-xs">11.30 AM</span>
+                  </div>
                 </th>
                 {timeSlots.slice(3).map((slot, idx) => (
                   <th 
@@ -162,6 +174,8 @@ export const RoutineTable = ({ filters }: RoutineTableProps) => {
                         key={`${day}-${slot.id}`}
                         session={session}
                         isHighlighted={session ? isHighlighted(session) : false}
+                        isFiltered={session ? isFiltered(session) : false}
+                        hasActiveFilters={hasActiveFilters}
                         onClick={() => session && handleCellClick(session)}
                         colSpan={session?.colSpan}
                         isCurrentTime={isCurrentTimeSlot(day, slot.id)}
@@ -169,8 +183,8 @@ export const RoutineTable = ({ filters }: RoutineTableProps) => {
                     );
                   })}
                   
-                  {/* Break cell - only render on first row */}
-                  {dayIndex === 0 && <BreakCell />}
+                  {/* Break cell for each day */}
+                  <BreakCell />
                   
                   {/* Remaining time slots */}
                   {timeSlots.slice(3).map((slot, slotIndex) => {
@@ -183,6 +197,8 @@ export const RoutineTable = ({ filters }: RoutineTableProps) => {
                         key={`${day}-${slot.id}`}
                         session={session}
                         isHighlighted={session ? isHighlighted(session) : false}
+                        isFiltered={session ? isFiltered(session) : false}
+                        hasActiveFilters={hasActiveFilters}
                         onClick={() => session && handleCellClick(session)}
                         colSpan={session?.colSpan}
                         isCurrentTime={isCurrentTimeSlot(day, slot.id)}
