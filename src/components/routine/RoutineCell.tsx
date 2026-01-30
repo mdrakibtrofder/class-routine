@@ -90,9 +90,16 @@ export const RoutineCell = ({
                   {session.courseCode}
                 </span>
               </div>
-              <span className="text-xs font-medium bg-blue-500 text-white px-1.5 py-0.5 rounded group-hover:bg-white/20">
-                {teacherNames}
-              </span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-medium bg-blue-500 text-white px-1.5 py-0.5 rounded group-hover:bg-white/20">
+                  {teacherNames}
+                </span>
+                {session.isOddRoll && (
+                  <span className="text-[10px] font-medium bg-purple-500 text-white px-1.5 py-0.5 rounded group-hover:bg-white/20">
+                    #ODD
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Bottom Row: Room & Department */}

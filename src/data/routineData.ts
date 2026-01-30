@@ -13,8 +13,8 @@ export const courses: Course[] = [
     code: 'CSE 1204',
     title: 'Computer Applications in Business Sessional',
     theoryHours: 0,
-    sessionalHours: 3.0,
-    creditHours: 6.0,
+    sessionalHours: 1.5,
+    creditHours: 3.0,
     type: 'sessional',
   },
   {
@@ -44,10 +44,18 @@ export const courses: Course[] = [
   {
     code: 'CSE 4102',
     title: 'Computer Security Sessional',
-    theoryHours: 0.75,
-    sessionalHours: 1.5,
-    creditHours: 2.25,
+    theoryHours: 0,
+    sessionalHours: 0.75,
+    creditHours: 1.5,
     type: 'sessional',
+  },
+  {
+    code: 'CSE 2109',
+    title: 'Computer Fundamentals',
+    theoryHours: 3.0,
+    sessionalHours: 0,
+    creditHours: 3.0,
+    type: 'theory',
   },
 ];
 
@@ -80,15 +88,15 @@ export const departments: Department[] = [
 ];
 
 export const timeSlots: TimeSlot[] = [
-  { id: '1', start: '08:00', end: '08:50', label: '08.00-08.50 AM' },
-  { id: '2', start: '09:00', end: '09:50', label: '09.00-09.50 AM' },
-  { id: '3', start: '10:00', end: '10:50', label: '10.00-10.50 AM' },
-  { id: '4', start: '11:30', end: '12:20', label: '11.30-12.20 PM' },
-  { id: '5', start: '12:30', end: '13:20', label: '12.30-01.20 PM' },
-  { id: '6', start: '13:30', end: '14:20', label: '01.30-02.20 PM' },
-  { id: '7', start: '14:30', end: '15:20', label: '02.30-03.20 PM' },
-  { id: '8', start: '15:30', end: '16:20', label: '03.30-04.20 PM' },
-  { id: '9', start: '16:30', end: '17:20', label: '04.30-05.20 PM' },
+  { id: '1', start: '08:00', end: '08:50', label: '08.00 AM - 08.50 AM' },
+  { id: '2', start: '09:00', end: '09:50', label: '09.00 - 09.50 AM' },
+  { id: '3', start: '10:00', end: '10:50', label: '10.00 - 10.50 AM' },
+  { id: '4', start: '11:30', end: '12:20', label: '11.30 - 12.20 PM' },
+  { id: '5', start: '12:30', end: '13:20', label: '12.30 - 01.20 PM' },
+  { id: '6', start: '13:30', end: '14:20', label: '01.30 - 02.20 PM' },
+  { id: '7', start: '14:30', end: '15:20', label: '02.30 - 03.20 PM' },
+  { id: '8', start: '15:30', end: '16:20', label: '03.30 - 04.20 PM' },
+  { id: '9', start: '16:30', end: '17:20', label: '04.30 - 05.20 PM' },
 ];
 
 export const days: Day[] = ['SUN', 'MON', 'TUE', 'WED', 'THU'];
@@ -210,10 +218,50 @@ export const classSessions: ClassSession[] = [
     startTime: '11:30',
     endTime: '14:20',
     colSpan: 3,
+    isOddRoll: true,
+  },
+  {
+    id: '10',
+    courseCode: 'CSE 2109',
+    teacherCodes: ['MRT'],
+    roomNo: '510',
+    department: 'English',
+    year: 2,
+    semester: 1,
+    section: 'B',
+    day: 'TUE',
+    startTime: '09:00',
+    endTime: '09:50',
+  },
+  {
+    id: '11',
+    courseCode: 'CSE 2109',
+    teacherCodes: ['MRT'],
+    roomNo: '510',
+    department: 'English',
+    year: 2,
+    semester: 1,
+    section: 'B',
+    day: 'WED',
+    startTime: '09:00',
+    endTime: '09:50',
+  },
+  {
+    id: '12',
+    courseCode: 'CSE 2109',
+    teacherCodes: ['MRT'],
+    roomNo: '510',
+    department: 'English',
+    year: 2,
+    semester: 1,
+    section: 'B',
+    day: 'THU',
+    startTime: '13:30',
+    endTime: '14:20',
   },
 ];
 
-export const rooms = ['014', '210', '302', '311', '407'];
+export const rooms = ['014', '210', '302', '311', '407', '510'];
 
 export const getTeacherByCode = (code: string): Teacher | undefined => {
   return teachers.find(t => t.code === code);
