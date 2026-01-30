@@ -22,7 +22,7 @@ export const CourseList = () => {
               <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Course Name</th>
               <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Theory</th>
               <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Sessional</th>
-              <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Credits</th>
+              <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Credit Hours</th>
             </tr>
           </thead>
           <tbody>

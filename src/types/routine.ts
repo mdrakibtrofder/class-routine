@@ -33,6 +33,7 @@ export interface ClassSession {
   startTime: string;
   endTime: string;
   colSpan?: number;
+  isOddRoll?: boolean;
 }
 
 export type Day = 'SUN' | 'MON' | 'TUE' | 'WED' | 'THU';
