@@ -11,7 +11,7 @@ export const courses: Course[] = [
   },
   {
     code: 'CSE 1204',
-    title: 'Object Oriented Programming Language I Sessional',
+    title: 'Computer Applications in Business Sessional',
     theoryHours: 0,
     sessionalHours: 3.0,
     creditHours: 6.0,
@@ -41,6 +41,14 @@ export const courses: Course[] = [
     creditHours: 3.0,
     type: 'sessional',
   },
+  {
+    code: 'CSE 4102',
+    title: 'Computer Security Sessional',
+    theoryHours: 0.75,
+    sessionalHours: 1.5,
+    creditHours: 2.25,
+    type: 'sessional',
+  },
 ];
 
 export const teachers: Teacher[] = [
@@ -53,6 +61,12 @@ export const teachers: Teacher[] = [
   {
     code: 'RA',
     name: 'Ruhul Amin',
+    designation: 'Lecturer',
+    department: 'CSE',
+  },
+  {
+    code: 'NAO',
+    name: 'Nadim Anam Opu',
     designation: 'Lecturer',
     department: 'CSE',
   },
@@ -182,6 +196,20 @@ export const classSessions: ClassSession[] = [
     day: 'THU',
     startTime: '10:00',
     endTime: '10:50',
+  },
+  {
+    id: '9',
+    courseCode: 'CSE 4102',
+    teacherCodes: ['MRT', 'NAO'],
+    roomNo: '302',
+    department: 'CSE',
+    year: 4,
+    semester: 1,
+    section: 'B',
+    day: 'TUE',
+    startTime: '11:30',
+    endTime: '14:20',
+    colSpan: 3,
   },
 ];
 
