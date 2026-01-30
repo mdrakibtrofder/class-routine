@@ -85,28 +85,27 @@ export const CourseDetailModal = ({ session, open, onOpenChange }: CourseDetailM
           {/* Class Info - Year, Semester, Section */}
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-muted-foreground">Class</h4>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border bg-gradient-to-r from-blue-500/20 to-indigo-500/20 text-blue-700 border-blue-300">
                 <GraduationCap className="w-4 h-4" />
-                <div className="flex flex-col">
-                  <span className="text-xs opacity-70">Year</span>
-                  <span className="font-semibold">{session.year}</span>
-                </div>
+                <span className="text-xs opacity-70">Year -</span>
+                <span className="font-semibold">{session.year}</span>
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-700 border-emerald-300">
                 <Calendar className="w-4 h-4" />
-                <div className="flex flex-col">
-                  <span className="text-xs opacity-70">Semester</span>
-                  <span className="font-semibold">{session.semester}</span>
-                </div>
+                <span className="text-xs opacity-70">Semester -</span>
+                <span className="font-semibold">{session.semester}</span>
               </div>
               {session.section && (
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-700 border-purple-300">
                   <LayoutGrid className="w-4 h-4" />
-                  <div className="flex flex-col">
-                    <span className="text-xs opacity-70">Section</span>
-                    <span className="font-semibold">{session.section}</span>
-                  </div>
+                  <span className="text-xs opacity-70">Section -</span>
+                  <span className="font-semibold">{session.section}</span>
+                </div>
+              )}
+              {session.isOddRoll && (
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border bg-gradient-to-r from-violet-500/20 to-purple-500/20 text-violet-700 border-violet-300">
+                  <span className="font-semibold">#ODD</span>
                 </div>
               )}
             </div>
