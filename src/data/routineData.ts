@@ -89,14 +89,14 @@ export const departments: Department[] = [
 
 export const timeSlots: TimeSlot[] = [
   { id: '1', start: '08:00', end: '08:50', label: '08.00 AM - 08.50 AM' },
-  { id: '2', start: '09:00', end: '09:50', label: '09.00 - 09.50 AM' },
-  { id: '3', start: '10:00', end: '10:50', label: '10.00 - 10.50 AM' },
-  { id: '4', start: '11:30', end: '12:20', label: '11.30 - 12.20 PM' },
-  { id: '5', start: '12:30', end: '13:20', label: '12.30 - 01.20 PM' },
-  { id: '6', start: '13:30', end: '14:20', label: '01.30 - 02.20 PM' },
-  { id: '7', start: '14:30', end: '15:20', label: '02.30 - 03.20 PM' },
-  { id: '8', start: '15:30', end: '16:20', label: '03.30 - 04.20 PM' },
-  { id: '9', start: '16:30', end: '17:20', label: '04.30 - 05.20 PM' },
+  { id: '2', start: '09:00', end: '09:50', label: '09.00 AM - 09.50 AM' },
+  { id: '3', start: '10:00', end: '10:50', label: '10.00 AM - 10.50 AM' },
+  { id: '4', start: '11:30', end: '12:20', label: '11.30 AM - 12.20 PM' },
+  { id: '5', start: '12:30', end: '13:20', label: '12.30 PM - 01.20 PM' },
+  { id: '6', start: '13:30', end: '14:20', label: '01.30 PM - 02.20 PM' },
+  { id: '7', start: '14:30', end: '15:20', label: '02.30 PM - 03.20 PM' },
+  { id: '8', start: '15:30', end: '16:20', label: '03.30 PM - 04.20 PM' },
+  { id: '9', start: '16:30', end: '17:20', label: '04.30 PM - 05.20 PM' },
 ];
 
 export const days: Day[] = ['SUN', 'MON', 'TUE', 'WED', 'THU'];
@@ -106,7 +106,7 @@ export const classSessions: ClassSession[] = [
     id: '1',
     courseCode: 'CSE 2124',
     teacherCodes: ['MRT'],
-    roomNo: '210',
+    roomNo: '014',
     department: 'CE',
     year: 2,
     semester: 1,
@@ -196,14 +196,14 @@ export const classSessions: ClassSession[] = [
     id: '8',
     courseCode: 'CSE 4215',
     teacherCodes: ['MRT'],
-    roomNo: '407',
+    roomNo: '310',
     department: 'CSE',
     year: 4,
     semester: 2,
     section: 'A',
-    day: 'THU',
-    startTime: '10:00',
-    endTime: '10:50',
+    day: 'MON',
+    startTime: '12:30',
+    endTime: '13:20',
   },
   {
     id: '9',
@@ -237,7 +237,7 @@ export const classSessions: ClassSession[] = [
     id: '11',
     courseCode: 'CSE 2109',
     teacherCodes: ['MRT'],
-    roomNo: '510',
+    roomNo: '506',
     department: 'English',
     year: 2,
     semester: 1,
@@ -250,7 +250,7 @@ export const classSessions: ClassSession[] = [
     id: '12',
     courseCode: 'CSE 2109',
     teacherCodes: ['MRT'],
-    roomNo: '510',
+    roomNo: '506',
     department: 'English',
     year: 2,
     semester: 1,
@@ -261,7 +261,7 @@ export const classSessions: ClassSession[] = [
   },
 ];
 
-export const rooms = ['014', '210', '302', '311', '407', '510'];
+export const rooms = ['014', '210', '302', '310', '311', '407', '506', '510'];
 
 export const getTeacherByCode = (code: string): Teacher | undefined => {
   return teachers.find(t => t.code === code);
