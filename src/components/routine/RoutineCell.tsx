@@ -70,9 +70,9 @@ export const RoutineCell = ({
           <td
             colSpan={colSpan}
             className={cn(
-              'routine-cell cell-interactive group cursor-pointer',
+              'routine-cell cell-interactive cursor-pointer',
               'bg-muted/50 border border-gray-400',
-              'hover:bg-[#1891CF] hover:border-[#1891CF]',
+              'hover:bg-[#1891CF] hover:border-[#1891CF] [&:hover_*]:text-white',
               isHighlighted && 'cell-highlighted ring-2 ring-primary ring-offset-2',
               isCurrentTime && 'border-t-2 border-t-destructive'
             )}
@@ -82,20 +82,20 @@ export const RoutineCell = ({
             <div className="flex items-start justify-between gap-2 mb-2">
               <div className="flex items-center gap-1.5">
                 {isSessional ? (
-                  <FlaskConical className="w-4 h-4 text-foreground group-hover:text-white" />
+                  <FlaskConical className="w-4 h-4 text-foreground" />
                 ) : (
-                  <BookOpen className="w-4 h-4 text-foreground group-hover:text-white" />
+                  <BookOpen className="w-4 h-4 text-foreground" />
                 )}
-                <span className="font-bold text-sm text-foreground group-hover:text-white">
+                <span className="font-bold text-sm text-foreground">
                   {session.courseCode}
                 </span>
               </div>
               <div className="flex items-center gap-1">
-                <span className="text-xs font-medium bg-blue-500 text-white px-1.5 py-0.5 rounded group-hover:bg-white/20">
+                <span className="text-xs font-medium bg-blue-500 text-white px-1.5 py-0.5 rounded">
                   {teacherNames}
                 </span>
                 {session.isOddRoll && (
-                  <span className="text-[10px] font-medium bg-purple-500 text-white px-1.5 py-0.5 rounded group-hover:bg-white/20">
+                  <span className="text-[10px] font-medium bg-purple-500 text-white px-1.5 py-0.5 rounded">
                     #ODD
                   </span>
                 )}
