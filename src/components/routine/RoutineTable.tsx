@@ -153,7 +153,7 @@ export const RoutineTable = ({ filters, onClearFilters }: RoutineTableProps) => 
             </thead>
             <tbody>
               {days.map((day, dayIndex) => (
-                <tr key={day} className="group">
+                <tr key={day}>
                   <td className={cn(
                     "day-header text-sm",
                     dayIndex === days.length - 1 && "rounded-bl-2xl"

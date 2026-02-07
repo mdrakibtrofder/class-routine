@@ -133,8 +133,7 @@
   }
 
   .cell-interactive {
-    @apply transition-all duration-300 ease-out cursor-pointer;
-    @apply hover:scale-[1.02] hover:shadow-xl hover:z-10;
+    @apply transition-colors duration-200 ease-out cursor-pointer;
   }
 
   .cell-highlighted {
