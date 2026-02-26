@@ -87,7 +87,7 @@ export const departments: Department[] = [
   { code: 'English', name: 'English', fullName: 'Department of English' },
 ];
 
-export const timeSlots: TimeSlot[] = [
+export const defaultTimeSlots: TimeSlot[] = [
   { id: '1', start: '08:00', end: '08:50', label: '08.00 AM - 08.50 AM' },
   { id: '2', start: '09:00', end: '09:50', label: '09.00 AM - 09.50 AM' },
   { id: '3', start: '10:00', end: '10:50', label: '10.00 AM - 10.50 AM' },
@@ -98,6 +98,24 @@ export const timeSlots: TimeSlot[] = [
   { id: '8', start: '15:30', end: '16:20', label: '03.30 PM - 04.20 PM' },
   { id: '9', start: '16:30', end: '17:20', label: '04.30 PM - 05.20 PM' },
 ];
+
+export const ramadanTimeSlots: TimeSlot[] = [
+  { id: '1', start: '09:00', end: '09:45', label: '09.00 AM - 09.45 AM' },
+  { id: '2', start: '09:50', end: '10:35', label: '09.50 AM - 10.35 AM' },
+  { id: '3', start: '10:40', end: '11:25', label: '10.40 AM - 11.25 AM' },
+  { id: '4', start: '11:30', end: '12:15', label: '11.30 AM - 12.15 PM' },
+  { id: '5', start: '12:20', end: '13:05', label: '12.20 PM - 01.05 PM' },
+  { id: '6', start: '13:40', end: '14:25', label: '01.40 PM - 02.25 PM' },
+  { id: '7', start: '14:30', end: '15:15', label: '02.30 PM - 03.15 PM' },
+  { id: '8', start: '15:20', end: '16:05', label: '03.20 PM - 04.05 PM' },
+  { id: '9', start: '16:10', end: '16:55', label: '04.10 PM - 04.55 PM' },
+];
+
+export const defaultBreakLabel = '10.50 AM - 11.30 AM';
+export const ramadanBreakLabel = '01.05 PM - 01.40 PM';
+
+// Default export for backward compatibility
+export const timeSlots = defaultTimeSlots;
 
 export const days: Day[] = ['SUN', 'MON', 'TUE', 'WED', 'THU'];
 

@@ -39,3 +39,41 @@ export const Header = () => {
     </header>
   );
 };
+
+// Schedule selector component placed between header and filter bar
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Moon, Clock } from 'lucide-react';
+
+interface ScheduleSelectorProps {
+  schedule: 'ramadan' | 'default';
+  onScheduleChange: (value: 'ramadan' | 'default') => void;
+}
+
+export const ScheduleSelector = ({ schedule, onScheduleChange }: ScheduleSelectorProps) => {
+  return (
+    <div className="flex items-center justify-center gap-3 animate-fade-in">
+      <div className="flex items-center gap-2 bg-card/80 backdrop-blur-sm border border-border rounded-xl px-4 py-2 shadow-sm">
+        {schedule === 'ramadan' ? (
+          <Moon className="w-4 h-4 text-accent" />
+        ) : (
+          <Clock className="w-4 h-4 text-primary" />
+        )}
+        <Select value={schedule} onValueChange={(v) => onScheduleChange(v as 'ramadan' | 'default')}>
+          <SelectTrigger className="w-[220px] border-0 bg-transparent shadow-none focus:ring-0 h-8">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-popover border-border">
+            <SelectItem value="ramadan">🌙 Ramadan Time Schedule</SelectItem>
+            <SelectItem value="default">🕐 Default Time Schedule</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+};
