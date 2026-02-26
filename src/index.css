@@ -175,11 +175,11 @@
 
   .routine-cell {
     @apply relative p-3 min-h-[90px] transition-colors duration-200;
-    @apply border border-gray-400;
+    @apply border border-white;
   }
 
   .routine-cell-empty {
-    @apply bg-muted/30 border border-gray-400;
+    @apply bg-muted/30 border border-white;
   }
 
   .time-header {

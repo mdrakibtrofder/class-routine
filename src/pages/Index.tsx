@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FilterState } from '@/types/routine';
-import { Header } from '@/components/routine/Header';
+import { Header, ScheduleSelector } from '@/components/routine/Header';
 import { FilterBar } from '@/components/routine/FilterBar';
 import { RoutineTable } from '@/components/routine/RoutineTable';
 import { CourseList } from '@/components/routine/CourseList';
@@ -13,6 +13,8 @@ const Index = () => {
     roomNo: null,
     day: null,
   });
+
+  const [schedule, setSchedule] = useState<'ramadan' | 'default'>('ramadan');
 
   const handleFilterChange = (key: keyof FilterState, value: string | null) => {
     setFilters(prev => ({
@@ -41,23 +43,21 @@ const Index = () => {
       </div>
 
       <div className="relative container mx-auto px-4 py-8 space-y-8">
-        {/* Header */}
         <Header />
 
-        {/* Filter Bar */}
+        {/* Schedule Selector - between legend and filter */}
+        <ScheduleSelector schedule={schedule} onScheduleChange={setSchedule} />
+
         <FilterBar
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
         />
 
-        {/* Routine Table */}
-        <RoutineTable filters={filters} onClearFilters={handleClearFilters} />
+        <RoutineTable filters={filters} onClearFilters={handleClearFilters} schedule={schedule} />
 
-        {/* Course List */}
         <CourseList />
 
-        {/* Footer */}
         <footer className="text-center py-6 text-sm text-muted-foreground">
           <p>© 2026 BAUST - Department of CSE. Interactive Class Routine Viewer.</p>
         </footer>
