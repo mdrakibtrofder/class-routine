@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ClassSession, FilterState } from '@/types/routine';
-import { classSessions, timeSlots, days } from '@/data/routineData';
+import { classSessions, defaultTimeSlots, ramadanTimeSlots, defaultBreakLabel, ramadanBreakLabel, days } from '@/data/routineData';
 import { RoutineCell } from './RoutineCell';
 import { BreakCell } from './BreakCell';
 import { CourseDetailModal } from './CourseDetailModal';
@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 interface RoutineTableProps {
   filters: FilterState;
   onClearFilters: () => void;
+  schedule: 'ramadan' | 'default';
 }
 
 const dayLabels: Record<string, string> = {
@@ -36,55 +37,60 @@ const parseTimeToMinutes = (time: string): number => {
   return hours * 60 + minutes;
 };
 
-const getCurrentTimeSlotId = (): string | null => {
-  const now = new Date();
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
-  
-  for (const slot of timeSlots) {
-    const slotStart = parseTimeToMinutes(slot.start);
-    const slotEnd = parseTimeToMinutes(slot.end);
-    
-    if (currentMinutes >= slotStart && currentMinutes <= slotEnd) {
-      return slot.id;
-    }
-  }
-  return null;
-};
-
-export const RoutineTable = ({ filters, onClearFilters }: RoutineTableProps) => {
+export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTableProps) => {
   const [selectedSession, setSelectedSession] = useState<ClassSession | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentTimeSlotId, setCurrentTimeSlotId] = useState<string | null>(null);
   const [currentDay, setCurrentDay] = useState<string>('');
 
+  const isRamadan = schedule === 'ramadan';
+  const timeSlots = isRamadan ? ramadanTimeSlots : defaultTimeSlots;
+  const showBreak = !isRamadan;
+  const breakAfterIndex = isRamadan ? timeSlots.length : 3; // No break in Ramadan, after 3 in default
+  const breakLabel = defaultBreakLabel;
+
   const hasActiveFilters = Object.values(filters).some(v => v !== null);
 
   useEffect(() => {
     const updateCurrentTime = () => {
-      setCurrentTimeSlotId(getCurrentTimeSlotId());
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      
+      let foundSlot: string | null = null;
+      for (const slot of timeSlots) {
+        const slotStart = parseTimeToMinutes(slot.start);
+        const slotEnd = parseTimeToMinutes(slot.end);
+        if (currentMinutes >= slotStart && currentMinutes <= slotEnd) {
+          foundSlot = slot.id;
+          break;
+        }
+      }
+      setCurrentTimeSlotId(foundSlot);
       setCurrentDay(getCurrentDayCode());
     };
     
     updateCurrentTime();
     const interval = setInterval(updateCurrentTime, 60000);
-    
     return () => clearInterval(interval);
-  }, []);
+  }, [timeSlots]);
 
   const getSessionForSlot = (day: string, slotId: string): ClassSession | null => {
     const slot = timeSlots.find(s => s.id === slotId);
     if (!slot) return null;
 
+    // Map ramadan slots back to default time starts for session matching
+    const defaultSlot = defaultTimeSlots.find(s => s.id === slotId);
+    if (!defaultSlot) return null;
+
     return classSessions.find(session => {
       if (session.day !== day) return false;
-      const sessionStart = session.startTime;
-      return sessionStart === slot.start;
+      return session.startTime === defaultSlot.start;
     }) || null;
   };
 
-  const isSlotCoveredBySpan = (day: string, slotIndex: number): boolean => {
+  const isSlotCoveredBySpan = (day: string, slotIndex: number, slotsSubset: typeof timeSlots): boolean => {
     for (let i = 0; i < slotIndex; i++) {
-      const prevSession = getSessionForSlot(day, timeSlots[i].id);
+      const prevSession = getSessionForSlot(day, slotsSubset[i].id);
       if (prevSession?.colSpan && i + prevSession.colSpan > slotIndex) {
         return true;
       }
@@ -94,13 +100,11 @@ export const RoutineTable = ({ filters, onClearFilters }: RoutineTableProps) => 
 
   const isFiltered = (session: ClassSession): boolean => {
     if (!hasActiveFilters) return true;
-
     const matchesDept = !filters.department || session.department === filters.department;
     const matchesCourse = !filters.courseCode || session.courseCode === filters.courseCode;
     const matchesTeacher = !filters.teacherCode || session.teacherCodes.includes(filters.teacherCode);
     const matchesRoom = !filters.roomNo || session.roomNo === filters.roomNo;
     const matchesDay = !filters.day || session.day === filters.day;
-
     return matchesDept && matchesCourse && matchesTeacher && matchesRoom && matchesDay;
   };
 
@@ -118,6 +122,9 @@ export const RoutineTable = ({ filters, onClearFilters }: RoutineTableProps) => 
     setModalOpen(true);
   };
 
+  const slotsBeforeBreak = timeSlots.slice(0, breakAfterIndex);
+  const slotsAfterBreak = timeSlots.slice(breakAfterIndex);
+
   return (
     <>
       {hasActiveFilters && (
@@ -129,22 +136,21 @@ export const RoutineTable = ({ filters, onClearFilters }: RoutineTableProps) => 
           <table className="w-full border-collapse table-fixed" style={{ borderSpacing: '1px' }}>
             <thead>
               <tr>
-                <th className="time-header w-24 rounded-tl-2xl">Day</th>
-                {timeSlots.slice(0, 3).map((slot) => (
-                  <th key={slot.id} className="time-header">
+                <th className="time-header w-24 rounded-tl-2xl border border-border/30">Day</th>
+                {slotsBeforeBreak.map((slot) => (
+                  <th key={slot.id} className="time-header border border-border/30">
                     {slot.label}
                   </th>
                 ))}
-                <th className="time-header bg-accent text-accent-foreground w-28">
-                  <div className="flex flex-col">
-                    <span className="text-xs">10.50 AM</span>
-                    <span className="text-xs">11.30 AM</span>
-                  </div>
-                </th>
-                {timeSlots.slice(3).map((slot, idx) => (
+                {showBreak && (
+                  <th className="time-header bg-accent text-primary-foreground w-28 border border-border/30">
+                    {breakLabel}
+                  </th>
+                )}
+                {slotsAfterBreak.map((slot, idx) => (
                   <th 
                     key={slot.id} 
-                    className={cn("time-header", idx === timeSlots.length - 4 && "rounded-tr-2xl")}
+                    className={cn("time-header border border-border/30", idx === slotsAfterBreak.length - 1 && "rounded-tr-2xl")}
                   >
                     {slot.label}
                   </th>
@@ -155,7 +161,7 @@ export const RoutineTable = ({ filters, onClearFilters }: RoutineTableProps) => 
               {days.map((day, dayIndex) => (
                 <tr key={day}>
                   <td className={cn(
-                    "day-header text-sm",
+                    "day-header text-sm border border-border/30",
                     dayIndex === days.length - 1 && "rounded-bl-2xl"
                   )}>
                     <div className="flex flex-col items-center">
@@ -164,9 +170,9 @@ export const RoutineTable = ({ filters, onClearFilters }: RoutineTableProps) => 
                     </div>
                   </td>
                   
-                  {/* First 3 time slots */}
-                  {timeSlots.slice(0, 3).map((slot, slotIndex) => {
-                    if (isSlotCoveredBySpan(day, slotIndex)) return null;
+                  {/* Slots before break */}
+                  {slotsBeforeBreak.map((slot, slotIndex) => {
+                    if (isSlotCoveredBySpan(day, slotIndex, slotsBeforeBreak)) return null;
                     
                     const session = getSessionForSlot(day, slot.id);
                     return (
@@ -183,13 +189,14 @@ export const RoutineTable = ({ filters, onClearFilters }: RoutineTableProps) => 
                     );
                   })}
                   
-                  {/* Break cell for each day */}
-                  <BreakCell />
+                  {/* Break cell */}
+                  {showBreak && <BreakCell isRamadan={false} breakLabel={breakLabel} />}
                   
-                  {/* Remaining time slots */}
-                  {timeSlots.slice(3).map((slot, slotIndex) => {
-                    const actualIndex = slotIndex + 3;
-                    if (isSlotCoveredBySpan(day, actualIndex)) return null;
+                  {/* Slots after break */}
+                  {slotsAfterBreak.map((slot, slotIndex) => {
+                    const globalIndex = slotIndex + breakAfterIndex;
+                    // Check span coverage considering all slots after break
+                    if (isSlotCoveredBySpan(day, slotIndex, slotsAfterBreak)) return null;
                     
                     const session = getSessionForSlot(day, slot.id);
                     return (

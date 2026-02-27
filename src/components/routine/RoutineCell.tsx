@@ -34,7 +34,7 @@ export const RoutineCell = ({
     return (
       <td 
         className={cn(
-          "routine-cell routine-cell-empty",
+          "routine-cell routine-cell-empty border border-border/30",
           isCurrentTime && "border-t-2 border-t-destructive"
         )}
         colSpan={colSpan}
@@ -56,7 +56,7 @@ export const RoutineCell = ({
       <td 
         colSpan={colSpan}
         className={cn(
-          "routine-cell routine-cell-empty opacity-20",
+          "routine-cell routine-cell-empty opacity-20 border border-border/30",
           isCurrentTime && "border-t-2 border-t-destructive"
         )}
       />
@@ -71,7 +71,7 @@ export const RoutineCell = ({
             colSpan={colSpan}
             className={cn(
               'routine-cell cell-interactive cursor-pointer',
-              'bg-muted/50 border border-gray-400',
+              'bg-muted/50 border border-border/30',
               'hover:bg-[#1891CF] hover:border-[#1891CF] [&:hover_*]:text-white',
               isHighlighted && 'cell-highlighted ring-2 ring-primary ring-offset-2',
               isCurrentTime && 'border-t-2 border-t-destructive'
