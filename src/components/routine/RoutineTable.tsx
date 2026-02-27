@@ -45,8 +45,9 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
 
   const isRamadan = schedule === 'ramadan';
   const timeSlots = isRamadan ? ramadanTimeSlots : defaultTimeSlots;
-  const breakAfterIndex = isRamadan ? 5 : 3; // After 5 slots in Ramadan, after 3 in default
-  const breakLabel = isRamadan ? ramadanBreakLabel : defaultBreakLabel;
+  const showBreak = !isRamadan;
+  const breakAfterIndex = isRamadan ? timeSlots.length : 3; // No break in Ramadan, after 3 in default
+  const breakLabel = defaultBreakLabel;
 
   const hasActiveFilters = Object.values(filters).some(v => v !== null);
 
@@ -135,23 +136,21 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
           <table className="w-full border-collapse table-fixed" style={{ borderSpacing: '1px' }}>
             <thead>
               <tr>
-                <th className="time-header w-24 rounded-tl-2xl border border-white">Day</th>
+                <th className="time-header w-24 rounded-tl-2xl border border-border/30">Day</th>
                 {slotsBeforeBreak.map((slot) => (
-                  <th key={slot.id} className="time-header border border-white">
+                  <th key={slot.id} className="time-header border border-border/30">
                     {slot.label}
                   </th>
                 ))}
-                <th className="time-header bg-accent text-accent-foreground w-28 border border-white">
-                  <div className="flex flex-col">
-                    <span className="text-xs">{breakLabel.split(' - ')[0]}</span>
-                    <span className="text-xs">-</span>
-                    <span className="text-xs">{breakLabel.split(' - ')[1]}</span>
-                  </div>
-                </th>
+                {showBreak && (
+                  <th className="time-header bg-accent text-primary-foreground w-28 border border-border/30">
+                    {breakLabel}
+                  </th>
+                )}
                 {slotsAfterBreak.map((slot, idx) => (
                   <th 
                     key={slot.id} 
-                    className={cn("time-header border border-white", idx === slotsAfterBreak.length - 1 && "rounded-tr-2xl")}
+                    className={cn("time-header border border-border/30", idx === slotsAfterBreak.length - 1 && "rounded-tr-2xl")}
                   >
                     {slot.label}
                   </th>
@@ -162,7 +161,7 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
               {days.map((day, dayIndex) => (
                 <tr key={day}>
                   <td className={cn(
-                    "day-header text-sm border border-white",
+                    "day-header text-sm border border-border/30",
                     dayIndex === days.length - 1 && "rounded-bl-2xl"
                   )}>
                     <div className="flex flex-col items-center">
@@ -191,7 +190,7 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
                   })}
                   
                   {/* Break cell */}
-                  <BreakCell isRamadan={isRamadan} breakLabel={breakLabel} />
+                  {showBreak && <BreakCell isRamadan={false} breakLabel={breakLabel} />}
                   
                   {/* Slots after break */}
                   {slotsAfterBreak.map((slot, slotIndex) => {
