@@ -18,7 +18,7 @@ const MosqueIcon = ({ className }: { className?: string }) => (
 
 export const BreakCell = ({ isRamadan = false, breakLabel }: BreakCellProps) => {
   return (
-    <td className="bg-accent/30 border border-border/30 p-0">
+    <td className="bg-accent/30 border border-foreground/20 p-0">
       <div className="flex flex-col items-center justify-center gap-2 h-full min-h-[90px] py-4 text-accent-foreground">
         <div className="w-10 h-10 rounded-full bg-accent/40 flex items-center justify-center animate-float">
           {isRamadan ? <MosqueIcon className="w-5 h-5" /> : <Coffee className="w-5 h-5" />}

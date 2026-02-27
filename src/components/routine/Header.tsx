@@ -1,8 +1,34 @@
-import { GraduationCap, Calendar } from 'lucide-react';
+import { GraduationCap, Calendar, Settings } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Moon, Clock } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-export const Header = () => {
+interface HeaderProps {
+  onOpenAdmin?: () => void;
+}
+
+export const Header = ({ onOpenAdmin }: HeaderProps) => {
   return (
-    <header className="text-center space-y-4 animate-fade-in">
+    <header className="text-center space-y-4 animate-fade-in relative">
+      {/* Settings icon top-right */}
+      {onOpenAdmin && (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onOpenAdmin}
+          className="absolute top-0 right-0 hover:bg-muted/50"
+          title="Admin Panel"
+        >
+          <Settings className="w-5 h-5 text-muted-foreground" />
+        </Button>
+      )}
+
       <div className="flex items-center justify-center gap-4">
         <div className="w-16 h-16 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-lg animate-float">
           <GraduationCap className="w-8 h-8 text-white" />
@@ -39,16 +65,6 @@ export const Header = () => {
     </header>
   );
 };
-
-// Schedule selector component placed between header and filter bar
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Moon, Clock } from 'lucide-react';
 
 interface ScheduleSelectorProps {
   schedule: 'ramadan' | 'default';
