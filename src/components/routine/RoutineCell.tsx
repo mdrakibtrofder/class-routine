@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { ClassSession } from '@/types/routine';
-import { getCourseByCode, getTeacherByCode } from '@/data/routineData';
+import { useRoutineData } from '@/hooks/useRoutineData';
 import { DepartmentBadge } from './DepartmentBadge';
 import { RoomBadge } from './RoomBadge';
 import { BookOpen, FlaskConical } from 'lucide-react';
@@ -30,11 +30,13 @@ export const RoutineCell = ({
   colSpan = 1, 
   isCurrentTime 
 }: RoutineCellProps) => {
+  const { getCourseByCode, getTeacherByCode } = useRoutineData();
+
   if (!session) {
     return (
       <td 
         className={cn(
-          "routine-cell routine-cell-empty border border-border/30",
+          "routine-cell routine-cell-empty border border-foreground/20",
           isCurrentTime && "border-t-2 border-t-destructive"
         )}
         colSpan={colSpan}
@@ -50,13 +52,12 @@ export const RoutineCell = ({
 
   const isSessional = course?.type === 'sessional';
 
-  // If filters are active and this cell is not in the filtered results, hide it
   if (hasActiveFilters && !isFiltered) {
     return (
       <td 
         colSpan={colSpan}
         className={cn(
-          "routine-cell routine-cell-empty opacity-20 border border-border/30",
+          "routine-cell routine-cell-empty opacity-20 border border-foreground/20",
           isCurrentTime && "border-t-2 border-t-destructive"
         )}
       />
@@ -71,14 +72,13 @@ export const RoutineCell = ({
             colSpan={colSpan}
             className={cn(
               'routine-cell cell-interactive cursor-pointer',
-              'bg-muted/50 border border-border/30',
+              'bg-muted/50 border border-foreground/20',
               'hover:bg-[#1891CF] hover:border-[#1891CF] [&:hover_*]:text-white',
               isHighlighted && 'cell-highlighted ring-2 ring-primary ring-offset-2',
               isCurrentTime && 'border-t-2 border-t-destructive'
             )}
             onClick={onClick}
           >
-            {/* Course Code & Teacher */}
             <div className="flex items-start justify-between gap-2 mb-2">
               <div className="flex items-center gap-1.5">
                 {isSessional ? (
@@ -102,7 +102,6 @@ export const RoutineCell = ({
               </div>
             </div>
 
-            {/* Bottom Row: Room & Department */}
             <div className="flex items-center justify-between gap-2">
               <RoomBadge roomNo={session.roomNo} compact />
               <DepartmentBadge 
