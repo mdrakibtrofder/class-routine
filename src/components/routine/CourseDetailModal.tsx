@@ -44,7 +44,7 @@ export const CourseDetailModal = ({ session, open, onOpenChange }: CourseDetailM
             <Clock className="w-5 h-5 text-primary" />
             <div>
               <p className="text-sm text-muted-foreground">Schedule</p>
-              <p className="font-semibold">{session.day} • {session.startTime} - {session.endTime}</p>
+              <p className="font-semibold">{session.day} • {formatTimeToAMPM(session.startTime)} - {formatTimeToAMPM(session.endTime)}</p>
             </div>
           </div>
 
