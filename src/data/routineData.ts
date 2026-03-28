@@ -161,7 +161,7 @@ export const classSessions: ClassSession[] = [
   {
     id: '4',
     courseCode: 'CSE 2110',
-    teacherCodes: ['RA', 'MRT'],
+    teacherCodes: ['NR', 'MRT'],
     roomNo: '302',
     department: 'English',
     year: 2,
