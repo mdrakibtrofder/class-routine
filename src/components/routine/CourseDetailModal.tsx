@@ -9,6 +9,13 @@ import { useRoutineData } from '@/hooks/useRoutineData';
 import { RoomBadge } from './RoomBadge';
 import { Clock, BookOpen, FlaskConical, Users, CreditCard, GraduationCap, Calendar, LayoutGrid } from 'lucide-react';
 
+const formatTimeToAMPM = (time: string): string => {
+  const [hours, minutes] = time.split(':').map(Number);
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const displayHours = hours > 12 ? hours - 12 : hours === 0 ? 12 : hours;
+  return `${String(displayHours).padStart(2, '0')}.${String(minutes).padStart(2, '0')} ${period}`;
+};
+
 interface CourseDetailModalProps {
   session: ClassSession | null;
   open: boolean;
@@ -44,7 +51,7 @@ export const CourseDetailModal = ({ session, open, onOpenChange }: CourseDetailM
             <Clock className="w-5 h-5 text-primary" />
             <div>
               <p className="text-sm text-muted-foreground">Schedule</p>
-              <p className="font-semibold">{session.day} • {session.startTime} - {session.endTime}</p>
+              <p className="font-semibold">{session.day} • {formatTimeToAMPM(session.startTime)} - {formatTimeToAMPM(session.endTime)}</p>
             </div>
           </div>
 

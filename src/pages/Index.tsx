@@ -10,7 +10,7 @@ const Index = () => {
   const [filters, setFilters] = useState<FilterState>({
     department: null, courseCode: null, teacherCode: null, roomNo: null, day: null,
   });
-  const [schedule, setSchedule] = useState<'ramadan' | 'default'>('ramadan');
+  const [schedule, setSchedule] = useState<'ramadan' | 'default'>('default');
   const [adminOpen, setAdminOpen] = useState(false);
 
   const handleFilterChange = (key: keyof FilterState, value: string | null) => {
