@@ -67,8 +67,8 @@ export const teachers: Teacher[] = [
     department: 'CSE',
   },
   {
-    code: 'RA',
-    name: 'Ruhul Amin',
+    code: 'NR',
+    name: 'Naimur Rahman',
     designation: 'Lecturer',
     department: 'CSE',
   },
