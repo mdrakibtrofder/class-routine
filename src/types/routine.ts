@@ -34,6 +34,7 @@ export interface ClassSession {
   endTime: string;
   colSpan?: number;
   isOddRoll?: boolean;
+  isEvenRoll?: boolean;
 }
 
 export type Day = 'SUN' | 'MON' | 'TUE' | 'WED' | 'THU';
