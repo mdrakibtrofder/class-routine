@@ -47,9 +47,13 @@ export interface TimeSlot {
 }
 
 export interface FilterState {
-  department: string | null;
-  courseCode: string | null;
-  teacherCode: string | null;
-  roomNo: string | null;
-  day: Day | null;
+  departments: string[];
+  courseCodes: string[];
+  teacherCodes: string[];
+  roomNos: string[];
+  days: Day[];
+  years: number[];
+  semesters: number[];
+  types: ('theory' | 'sessional')[];
+  sections: string[];
 }
