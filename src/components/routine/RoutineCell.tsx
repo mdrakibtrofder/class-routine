@@ -19,6 +19,7 @@ interface RoutineCellProps {
   onClick: () => void;
   colSpan?: number;
   isCurrentTime?: boolean;
+  isInStack?: boolean;
 }
 
 export const RoutineCell = ({ 
