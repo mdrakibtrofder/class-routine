@@ -35,6 +35,7 @@ export const RoutineCell = ({
   const { getCourseByCode, getTeacherByCode } = useRoutineData();
 
   if (!session) {
+    if (isInStack) return null;
     return (
       <td 
         className={cn(
