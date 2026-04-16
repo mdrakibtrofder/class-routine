@@ -1,18 +1,55 @@
+import { useMemo } from 'react';
 import { useRoutineData } from '@/hooks/useRoutineData';
+import { FilterState } from '@/types/routine';
 import { BookOpen, FlaskConical, Clock, CreditCard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export const CourseList = () => {
-  const { courses } = useRoutineData();
-  const totalTheory = courses.reduce((sum, c) => sum + c.theoryHours, 0);
-  const totalSessional = courses.reduce((sum, c) => sum + c.sessionalHours, 0);
-  const totalCredits = courses.reduce((sum, c) => sum + c.creditHours, 0);
+interface CourseListProps {
+  filters: FilterState;
+}
+
+export const CourseList = ({ filters }: CourseListProps) => {
+  const { courses, classSessions, getCourseByCode } = useRoutineData();
+  const hasActiveFilters = Object.values(filters).some(v => (v as string[]).length > 0);
+
+  const filteredCourses = useMemo(() => {
+    if (!hasActiveFilters) return courses;
+
+    // Get course codes from sessions that match filters
+    const matchingCodes = new Set<string>();
+    for (const session of classSessions) {
+      const course = getCourseByCode(session.courseCode);
+      const f = filters;
+      let match = true;
+      if (f.departments.length > 0 && !f.departments.includes(session.department)) match = false;
+      if (f.courseCodes.length > 0 && !f.courseCodes.includes(session.courseCode)) match = false;
+      if (f.teacherCodes.length > 0 && !f.teacherCodes.some(tc => session.teacherCodes.includes(tc))) match = false;
+      if (f.roomNos.length > 0 && !f.roomNos.includes(session.roomNo)) match = false;
+      if (f.days.length > 0 && !f.days.includes(session.day)) match = false;
+      if (f.years.length > 0 && !f.years.includes(String(session.year) as any)) match = false;
+      if (f.semesters.length > 0 && !f.semesters.includes(String(session.semester) as any)) match = false;
+      if (f.types.length > 0 && course && !f.types.includes(course.type)) match = false;
+      if (f.sections.length > 0 && session.section && !f.sections.includes(session.section)) match = false;
+      if (match) matchingCodes.add(session.courseCode);
+    }
+
+    return courses.filter(c => matchingCodes.has(c.code));
+  }, [courses, classSessions, filters, hasActiveFilters, getCourseByCode]);
+
+  const totalTheory = filteredCourses.reduce((sum, c) => sum + c.theoryHours, 0);
+  const totalSessional = filteredCourses.reduce((sum, c) => sum + c.sessionalHours, 0);
+  const totalCredits = filteredCourses.reduce((sum, c) => sum + c.creditHours, 0);
 
   return (
     <div className="glass-card rounded-2xl p-6 shadow-card animate-slide-up">
       <h3 className="text-lg font-display font-bold text-foreground mb-4 flex items-center gap-2">
         <BookOpen className="w-5 h-5 text-primary" />
         Course Summary
+        {hasActiveFilters && (
+          <span className="text-xs font-normal text-muted-foreground ml-2">
+            ({filteredCourses.length} of {courses.length} courses)
+          </span>
+        )}
       </h3>
       
       <div className="overflow-x-auto">
@@ -27,7 +64,7 @@ export const CourseList = () => {
             </tr>
           </thead>
           <tbody>
-            {courses.map((course, idx) => (
+            {filteredCourses.map((course, idx) => (
               <tr key={course.code} className={cn("border-b border-border/50 hover:bg-muted/30 transition-colors", idx % 2 === 0 && "bg-muted/10")}>
                 <td className="py-3 px-4">
                   <span className={cn("font-semibold text-sm", course.type === 'sessional' ? 'text-secondary' : 'text-primary')}>{course.code}</span>

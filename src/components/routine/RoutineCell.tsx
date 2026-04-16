@@ -19,6 +19,7 @@ interface RoutineCellProps {
   onClick: () => void;
   colSpan?: number;
   isCurrentTime?: boolean;
+  isInStack?: boolean;
 }
 
 export const RoutineCell = ({ 
@@ -28,11 +29,13 @@ export const RoutineCell = ({
   hasActiveFilters,
   onClick, 
   colSpan = 1, 
-  isCurrentTime 
+  isCurrentTime,
+  isInStack = false,
 }: RoutineCellProps) => {
   const { getCourseByCode, getTeacherByCode } = useRoutineData();
 
   if (!session) {
+    if (isInStack) return null;
     return (
       <td 
         className={cn(
@@ -53,6 +56,7 @@ export const RoutineCell = ({
   const isSessional = course?.type === 'sessional';
 
   if (hasActiveFilters && !isFiltered) {
+    if (isInStack) return null;
     return (
       <td 
         colSpan={colSpan}
@@ -64,15 +68,19 @@ export const RoutineCell = ({
     );
   }
 
+  const Wrapper = isInStack ? 'div' : 'td';
+  const wrapperProps = isInStack ? {} : { colSpan };
+
   return (
     <TooltipProvider delayDuration={200}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <td
-            colSpan={colSpan}
+          <Wrapper
+            {...wrapperProps}
             className={cn(
               'routine-cell cell-interactive cursor-pointer',
-              'bg-muted/50 border border-foreground/20',
+              'bg-muted/50',
+              !isInStack && 'border border-foreground/20',
               'hover:bg-[#1891CF] hover:border-[#1891CF] [&:hover_*]:text-white',
               isHighlighted && 'cell-highlighted ring-2 ring-primary ring-offset-2',
               isCurrentTime && 'border-t-2 border-t-destructive'
@@ -112,7 +120,7 @@ export const RoutineCell = ({
                 compact
               />
             </div>
-          </td>
+          </Wrapper>
         </TooltipTrigger>
         <TooltipContent side="top" className="max-w-xs z-50" sideOffset={5}>
           <p className="font-medium">{course?.title || session.courseCode}</p>

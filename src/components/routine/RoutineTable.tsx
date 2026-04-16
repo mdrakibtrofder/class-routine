@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ClassSession, FilterState } from '@/types/routine';
 import { useRoutineData } from '@/hooks/useRoutineData';
 import { RoutineCell } from './RoutineCell';
@@ -28,7 +28,7 @@ const parseTimeToMinutes = (time: string): number => {
 };
 
 export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTableProps) => {
-  const { classSessions, defaultTimeSlots, ramadanTimeSlots, defaultBreakLabel, days } = useRoutineData();
+  const { classSessions, defaultTimeSlots, ramadanTimeSlots, defaultBreakLabel, days, getCourseByCode } = useRoutineData();
   const [selectedSession, setSelectedSession] = useState<ClassSession | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentTimeSlotId, setCurrentTimeSlotId] = useState<string | null>(null);
@@ -37,10 +37,10 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
   const isRamadan = schedule === 'ramadan';
   const timeSlots = isRamadan ? ramadanTimeSlots : defaultTimeSlots;
   const showBreak = !isRamadan;
-  const breakAfterIndex = 3; // default schedule only
+  const breakAfterIndex = 3;
   const breakLabel = defaultBreakLabel;
 
-  const hasActiveFilters = Object.values(filters).some(v => v !== null);
+  const hasActiveFilters = Object.values(filters).some(v => (v as string[]).length > 0);
 
   useEffect(() => {
     const updateCurrentTime = () => {
@@ -63,30 +63,42 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
     return () => clearInterval(interval);
   }, [timeSlots]);
 
-  const getSessionForSlot = (day: string, slotId: string): ClassSession | null => {
-    const defSlot = defaultTimeSlots.find(s => s.id === slotId);
-    if (!defSlot) return null;
-    return classSessions.find(session => {
-      if (session.day !== day) return false;
-      return session.startTime === defSlot.start;
-    }) || null;
-  };
-
-  const isSlotCoveredBySpan = (day: string, slotIndex: number, slotsSubset: typeof timeSlots): boolean => {
-    for (let i = 0; i < slotIndex; i++) {
-      const prevSession = getSessionForSlot(day, slotsSubset[i].id);
-      if (prevSession?.colSpan && i + prevSession.colSpan > slotIndex) return true;
-    }
-    return false;
-  };
-
   const isFiltered = (session: ClassSession): boolean => {
     if (!hasActiveFilters) return true;
-    return (!filters.department || session.department === filters.department) &&
-      (!filters.courseCode || session.courseCode === filters.courseCode) &&
-      (!filters.teacherCode || session.teacherCodes.includes(filters.teacherCode)) &&
-      (!filters.roomNo || session.roomNo === filters.roomNo) &&
-      (!filters.day || session.day === filters.day);
+    const course = getCourseByCode(session.courseCode);
+    const f = filters;
+    if (f.departments.length > 0 && !f.departments.includes(session.department)) return false;
+    if (f.courseCodes.length > 0 && !f.courseCodes.includes(session.courseCode)) return false;
+    if (f.teacherCodes.length > 0 && !f.teacherCodes.some(tc => session.teacherCodes.includes(tc))) return false;
+    if (f.roomNos.length > 0 && !f.roomNos.includes(session.roomNo)) return false;
+    if (f.days.length > 0 && !f.days.includes(session.day)) return false;
+    if (f.years.length > 0 && !f.years.includes(String(session.year) as any)) return false;
+    if (f.semesters.length > 0 && !f.semesters.includes(String(session.semester) as any)) return false;
+    if (f.types.length > 0 && course && !f.types.includes(course.type)) return false;
+    if (f.sections.length > 0 && session.section && !f.sections.includes(session.section)) return false;
+    return true;
+  };
+
+  // Get ALL sessions for a given day+slot (multiple sessions can overlap)
+  const getSessionsForSlot = (day: string, slotId: string): ClassSession[] => {
+    const defSlot = defaultTimeSlots.find(s => s.id === slotId);
+    if (!defSlot) return [];
+    return classSessions.filter(session => session.day === day && session.startTime === defSlot.start);
+  };
+
+  // Check if a slot is covered by a previous session's colSpan
+  // Returns the sessions that cover this slot from a previous start
+  const getCoveringSessionsForSlot = (day: string, slotIndex: number, slotsSubset: typeof timeSlots): ClassSession[] => {
+    const covering: ClassSession[] = [];
+    for (let i = 0; i < slotIndex; i++) {
+      const sessions = getSessionsForSlot(day, slotsSubset[i].id);
+      for (const s of sessions) {
+        if (s.colSpan && i + s.colSpan > slotIndex) {
+          covering.push(s);
+        }
+      }
+    }
+    return covering;
   };
 
   const isHighlighted = (session: ClassSession): boolean => hasActiveFilters && isFiltered(session);
@@ -99,6 +111,87 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
 
   const slotsBeforeBreak = showBreak ? timeSlots.slice(0, breakAfterIndex) : timeSlots;
   const slotsAfterBreak = showBreak ? timeSlots.slice(breakAfterIndex) : [];
+
+  // Render cells for a slot that may have multiple sessions (vertical stacking)
+  const renderSlotCells = (day: string, slot: typeof timeSlots[0], slotIndex: number, slotsSubset: typeof timeSlots) => {
+    const covering = getCoveringSessionsForSlot(day, slotIndex, slotsSubset);
+    if (covering.length > 0) return null; // covered by colSpan
+
+    const sessions = getSessionsForSlot(day, slot.id);
+
+    if (sessions.length === 0) {
+      return (
+        <td
+          key={`${day}-${slot.id}`}
+          className={cn(
+            "routine-cell routine-cell-empty border border-foreground/20",
+            isCurrentTimeSlot(day, slot.id) && "border-t-2 border-t-destructive"
+          )}
+        />
+      );
+    }
+
+    // Filter visible sessions
+    const visibleSessions = hasActiveFilters ? sessions.filter(s => isFiltered(s)) : sessions;
+    const hiddenCount = sessions.length - visibleSessions.length;
+
+    if (visibleSessions.length === 0 && hasActiveFilters) {
+      return (
+        <td
+          key={`${day}-${slot.id}`}
+          colSpan={sessions[0]?.colSpan}
+          className={cn(
+            "routine-cell routine-cell-empty opacity-20 border border-foreground/20",
+            isCurrentTimeSlot(day, slot.id) && "border-t-2 border-t-destructive"
+          )}
+        />
+      );
+    }
+
+    if (visibleSessions.length === 1) {
+      const session = visibleSessions[0];
+      return (
+        <RoutineCell
+          key={`${day}-${slot.id}`}
+          session={session}
+          isHighlighted={isHighlighted(session)}
+          isFiltered={isFiltered(session)}
+          hasActiveFilters={hasActiveFilters}
+          onClick={() => handleCellClick(session)}
+          colSpan={session.colSpan}
+          isCurrentTime={isCurrentTimeSlot(day, slot.id)}
+        />
+      );
+    }
+
+    // Multiple sessions - vertical stacking
+    const maxColSpan = Math.max(...visibleSessions.map(s => s.colSpan || 1));
+    return (
+      <td
+        key={`${day}-${slot.id}`}
+        colSpan={maxColSpan}
+        className={cn(
+          "p-0 border border-foreground/20",
+          isCurrentTimeSlot(day, slot.id) && "border-t-2 border-t-destructive"
+        )}
+      >
+        <div className="flex flex-col divide-y divide-foreground/20">
+          {visibleSessions.map((session) => (
+            <RoutineCell
+              key={session.id}
+              session={session}
+              isHighlighted={isHighlighted(session)}
+              isFiltered={isFiltered(session)}
+              hasActiveFilters={hasActiveFilters}
+              onClick={() => handleCellClick(session)}
+              isCurrentTime={false}
+              isInStack={true}
+            />
+          ))}
+        </div>
+      </td>
+    );
+  };
 
   return (
     <>
@@ -135,41 +228,11 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
                     </div>
                   </td>
                   
-                  {slotsBeforeBreak.map((slot, slotIndex) => {
-                    if (isSlotCoveredBySpan(day, slotIndex, slotsBeforeBreak)) return null;
-                    const session = getSessionForSlot(day, slot.id);
-                    return (
-                      <RoutineCell
-                        key={`${day}-${slot.id}`}
-                        session={session}
-                        isHighlighted={session ? isHighlighted(session) : false}
-                        isFiltered={session ? isFiltered(session) : false}
-                        hasActiveFilters={hasActiveFilters}
-                        onClick={() => session && handleCellClick(session)}
-                        colSpan={session?.colSpan}
-                        isCurrentTime={isCurrentTimeSlot(day, slot.id)}
-                      />
-                    );
-                  })}
+                  {slotsBeforeBreak.map((slot, slotIndex) => renderSlotCells(day, slot, slotIndex, slotsBeforeBreak))}
                   
                   {showBreak && <BreakCell isRamadan={false} breakLabel={breakLabel} />}
                   
-                  {slotsAfterBreak.map((slot, slotIndex) => {
-                    if (isSlotCoveredBySpan(day, slotIndex, slotsAfterBreak)) return null;
-                    const session = getSessionForSlot(day, slot.id);
-                    return (
-                      <RoutineCell
-                        key={`${day}-${slot.id}`}
-                        session={session}
-                        isHighlighted={session ? isHighlighted(session) : false}
-                        isFiltered={session ? isFiltered(session) : false}
-                        hasActiveFilters={hasActiveFilters}
-                        onClick={() => session && handleCellClick(session)}
-                        colSpan={session?.colSpan}
-                        isCurrentTime={isCurrentTimeSlot(day, slot.id)}
-                      />
-                    );
-                  })}
+                  {slotsAfterBreak.map((slot, slotIndex) => renderSlotCells(day, slot, slotIndex, slotsAfterBreak))}
                 </tr>
               ))}
             </tbody>
