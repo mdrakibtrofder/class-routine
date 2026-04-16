@@ -29,7 +29,8 @@ export const RoutineCell = ({
   hasActiveFilters,
   onClick, 
   colSpan = 1, 
-  isCurrentTime 
+  isCurrentTime,
+  isInStack = false,
 }: RoutineCellProps) => {
   const { getCourseByCode, getTeacherByCode } = useRoutineData();
 
