@@ -6,20 +6,21 @@ import { RoutineTable } from '@/components/routine/RoutineTable';
 import { CourseList } from '@/components/routine/CourseList';
 import { AdminPanel } from '@/components/routine/AdminPanel';
 
+const emptyFilters: FilterState = {
+  departments: [], courseCodes: [], teacherCodes: [], roomNos: [], days: [],
+  years: [], semesters: [], types: [], sections: [],
+};
+
 const Index = () => {
-  const [filters, setFilters] = useState<FilterState>({
-    department: null, courseCode: null, teacherCode: null, roomNo: null, day: null,
-  });
+  const [filters, setFilters] = useState<FilterState>(emptyFilters);
   const [schedule, setSchedule] = useState<'ramadan' | 'default'>('default');
   const [adminOpen, setAdminOpen] = useState(false);
 
-  const handleFilterChange = (key: keyof FilterState, value: string | null) => {
-    setFilters(prev => ({ ...prev, [key]: value === 'all' ? null : value }));
+  const handleFilterChange = (key: keyof FilterState, values: string[]) => {
+    setFilters(prev => ({ ...prev, [key]: values }));
   };
 
-  const handleClearFilters = () => {
-    setFilters({ department: null, courseCode: null, teacherCode: null, roomNo: null, day: null });
-  };
+  const handleClearFilters = () => setFilters(emptyFilters);
 
   return (
     <div className="min-h-screen bg-background">
@@ -34,7 +35,7 @@ const Index = () => {
         <ScheduleSelector schedule={schedule} onScheduleChange={setSchedule} />
         <FilterBar filters={filters} onFilterChange={handleFilterChange} onClearFilters={handleClearFilters} />
         <RoutineTable filters={filters} onClearFilters={handleClearFilters} schedule={schedule} />
-        <CourseList />
+        <CourseList filters={filters} />
         <footer className="text-center py-6 text-sm text-muted-foreground">
           <p>© 2026 BAUST - Department of CSE. Interactive Class Routine Viewer.</p>
         </footer>
