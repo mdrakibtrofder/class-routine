@@ -198,16 +198,8 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
             <thead>
               <tr>
                 <th className="time-header w-24 rounded-tl-2xl border border-foreground/20">Day</th>
-                {slotsBeforeBreak.map((slot) => (
-                  <th key={slot.id} className="time-header border border-foreground/20">{slot.label}</th>
-                ))}
-                {showBreak && (
-                  <th className="time-header bg-accent w-28 border border-foreground/20">
-                    {breakLabel}
-                  </th>
-                )}
-                {slotsAfterBreak.map((slot, idx) => (
-                  <th key={slot.id} className={cn("time-header border border-foreground/20", idx === slotsAfterBreak.length - 1 && "rounded-tr-2xl")}>
+                {allSlots.map((slot, idx) => (
+                  <th key={slot.id} className={cn("time-header border border-foreground/20", idx === allSlots.length - 1 && "rounded-tr-2xl")}>
                     {slot.label}
                   </th>
                 ))}
@@ -223,11 +215,7 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
                     </div>
                   </td>
                   
-                  {slotsBeforeBreak.map((slot, slotIndex) => renderSlotCells(day, slot, slotIndex, slotsBeforeBreak))}
-                  
-                  {showBreak && <BreakCell isRamadan={false} breakLabel={breakLabel} />}
-                  
-                  {slotsAfterBreak.map((slot, slotIndex) => renderSlotCells(day, slot, slotIndex, slotsAfterBreak))}
+                  {allSlots.map((slot, slotIndex) => renderSlotCells(day, slot, slotIndex, allSlots))}
                 </tr>
               ))}
             </tbody>
