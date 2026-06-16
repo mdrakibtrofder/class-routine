@@ -105,8 +105,7 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
     setModalOpen(true);
   };
 
-  const slotsBeforeBreak = showBreak ? timeSlots.slice(0, breakAfterIndex) : timeSlots;
-  const slotsAfterBreak = showBreak ? timeSlots.slice(breakAfterIndex) : [];
+  const allSlots = timeSlots;
 
   // Render cells for a slot that may have multiple sessions (vertical stacking)
   const renderSlotCells = (day: string, slot: typeof timeSlots[0], slotIndex: number, slotsSubset: typeof timeSlots) => {
