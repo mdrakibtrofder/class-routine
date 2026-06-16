@@ -27,7 +27,7 @@ const parseTimeToMinutes = (time: string): number => {
 };
 
 export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTableProps) => {
-  const { classSessions, defaultTimeSlots, ramadanTimeSlots, defaultBreakLabel, days, getCourseByCode } = useRoutineData();
+  const { classSessions, defaultTimeSlots, ramadanTimeSlots, days, getCourseByCode } = useRoutineData();
   const [selectedSession, setSelectedSession] = useState<ClassSession | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentTimeSlotId, setCurrentTimeSlotId] = useState<string | null>(null);
@@ -35,9 +35,6 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
 
   const isRamadan = schedule === 'ramadan';
   const timeSlots = isRamadan ? ramadanTimeSlots : defaultTimeSlots;
-  const showBreak = !isRamadan;
-  const breakAfterIndex = 3;
-  const breakLabel = defaultBreakLabel;
 
   const hasActiveFilters = Object.values(filters).some(v => (v as string[]).length > 0);
 
