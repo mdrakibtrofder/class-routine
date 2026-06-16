@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { ClassSession, FilterState } from '@/types/routine';
 import { useRoutineData } from '@/hooks/useRoutineData';
 import { RoutineCell } from './RoutineCell';
-import { BreakCell } from './BreakCell';
 import { CourseDetailModal } from './CourseDetailModal';
 import { FilterNotification } from './FilterNotification';
 import { cn } from '@/lib/utils';
