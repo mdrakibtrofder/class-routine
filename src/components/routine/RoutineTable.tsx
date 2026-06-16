@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { ClassSession, FilterState } from '@/types/routine';
 import { useRoutineData } from '@/hooks/useRoutineData';
 import { RoutineCell } from './RoutineCell';
-import { BreakCell } from './BreakCell';
 import { CourseDetailModal } from './CourseDetailModal';
 import { FilterNotification } from './FilterNotification';
 import { cn } from '@/lib/utils';
@@ -28,7 +27,7 @@ const parseTimeToMinutes = (time: string): number => {
 };
 
 export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTableProps) => {
-  const { classSessions, defaultTimeSlots, ramadanTimeSlots, defaultBreakLabel, days, getCourseByCode } = useRoutineData();
+  const { classSessions, defaultTimeSlots, ramadanTimeSlots, days, getCourseByCode } = useRoutineData();
   const [selectedSession, setSelectedSession] = useState<ClassSession | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentTimeSlotId, setCurrentTimeSlotId] = useState<string | null>(null);
@@ -36,9 +35,6 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
 
   const isRamadan = schedule === 'ramadan';
   const timeSlots = isRamadan ? ramadanTimeSlots : defaultTimeSlots;
-  const showBreak = !isRamadan;
-  const breakAfterIndex = 3;
-  const breakLabel = defaultBreakLabel;
 
   const hasActiveFilters = Object.values(filters).some(v => (v as string[]).length > 0);
 
@@ -109,8 +105,7 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
     setModalOpen(true);
   };
 
-  const slotsBeforeBreak = showBreak ? timeSlots.slice(0, breakAfterIndex) : timeSlots;
-  const slotsAfterBreak = showBreak ? timeSlots.slice(breakAfterIndex) : [];
+  const allSlots = timeSlots;
 
   // Render cells for a slot that may have multiple sessions (vertical stacking)
   const renderSlotCells = (day: string, slot: typeof timeSlots[0], slotIndex: number, slotsSubset: typeof timeSlots) => {
@@ -203,16 +198,8 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
             <thead>
               <tr>
                 <th className="time-header w-24 rounded-tl-2xl border border-foreground/20">Day</th>
-                {slotsBeforeBreak.map((slot) => (
-                  <th key={slot.id} className="time-header border border-foreground/20">{slot.label}</th>
-                ))}
-                {showBreak && (
-                  <th className="time-header bg-accent w-28 border border-foreground/20">
-                    {breakLabel}
-                  </th>
-                )}
-                {slotsAfterBreak.map((slot, idx) => (
-                  <th key={slot.id} className={cn("time-header border border-foreground/20", idx === slotsAfterBreak.length - 1 && "rounded-tr-2xl")}>
+                {allSlots.map((slot, idx) => (
+                  <th key={slot.id} className={cn("time-header border border-foreground/20", idx === allSlots.length - 1 && "rounded-tr-2xl")}>
                     {slot.label}
                   </th>
                 ))}
@@ -228,11 +215,7 @@ export const RoutineTable = ({ filters, onClearFilters, schedule }: RoutineTable
                     </div>
                   </td>
                   
-                  {slotsBeforeBreak.map((slot, slotIndex) => renderSlotCells(day, slot, slotIndex, slotsBeforeBreak))}
-                  
-                  {showBreak && <BreakCell isRamadan={false} breakLabel={breakLabel} />}
-                  
-                  {slotsAfterBreak.map((slot, slotIndex) => renderSlotCells(day, slot, slotIndex, slotsAfterBreak))}
+                  {allSlots.map((slot, slotIndex) => renderSlotCells(day, slot, slotIndex, allSlots))}
                 </tr>
               ))}
             </tbody>
